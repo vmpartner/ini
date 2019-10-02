@@ -1,38 +1,38 @@
-INI [![Build Status](https://travis-ci.org/go-ini/ini.svg?branch=master)](https://travis-ci.org/go-ini/ini) [![Sourcegraph](https://img.shields.io/badge/view%20on-Sourcegraph-brightgreen.svg)](https://sourcegraph.com/github.com/go-ini/ini)
-===
+# Config ini
 
-![](https://avatars0.githubusercontent.com/u/10216035?v=3&s=200)
+Usage:
+```ini
+# possible values : production, development
+app_mode = development
 
-Package ini provides INI file read and write functionality in Go.
+[paths]
+# Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)
+data = /home/git/grafana
 
-## Features
+[server]
+# Protocol (http or https)
+protocol = http
 
-- Load from multiple data sources(`[]byte`, file and `io.ReadCloser`) with overwrites.
-- Read with recursion values.
-- Read with parent-child sections.
-- Read with auto-increment key names.
-- Read with multiple-line values.
-- Read with tons of helper methods.
-- Read and convert values to Go types.
-- Read and **WRITE** comments of sections and keys.
-- Manipulate sections, keys and comments with ease.
-- Keep sections and keys in order as you parse and save.
+# The http port  to use
+http_port = 9999
 
-## Installation
-
-The minimum requirement of Go is **1.6**.
-
-```sh
-$ go get gopkg.in/ini.v1
+# Redirect to correct domain if host header does not match domain
+# Prevents DNS rebinding attacks
+enforce_domain = true
 ```
 
-Please add `-u` flag to update in the future.
+```golang
 
-## Getting Help
+import "github.com/vmpartner/ini"
 
-- [Getting Started](https://ini.unknwon.io/docs/intro/getting_started)
-- [API Documentation](https://gowalker.org/gopkg.in/ini.v1)
+func main() {
+    config, err := ini.Load("my.ini")
+    if err != nil {
+        fmt.Printf("Fail to read file: %v", err)
+        os.Exit(1)
+    }
+    protocol := config.Section("server").Key("protocol").String()
+}
+```
 
-## License
-
-This project is under Apache v2 License. See the [LICENSE](LICENSE) file for the full license text.
+Source: https://ini.unknwon.io/
